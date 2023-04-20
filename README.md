@@ -1,62 +1,89 @@
-# PortaPack Mayhem
+# [**Red**Stack.io](https://www.redstack.io) Labs presents...
+## A backported improvement of the upstream eried/portapack-mayhem v1.6.0 stable.
 
-[![Build Status](https://travis-ci.com/eried/portapack-mayhem.svg?branch=master)](https://travis-ci.com/eried/portapack-mayhem) [![Nightly Release](https://github.com/eried/portapack-mayhem/actions/workflows/create_nightly_release.yml/badge.svg?branch=next)](https://github.com/eried/portapack-mayhem/actions/workflows/create_nightly_release.yml) [![CodeScene Code Health](https://codescene.io/projects/8381/status-badges/code-health)](https://codescene.io/projects/8381) [![GitHub All Releases](https://img.shields.io/github/downloads/eried/portapack-mayhem/total)](https://github.com/eried/portapack-mayhem/releases) [![GitHub Releases](https://img.shields.io/github/downloads/eried/portapack-mayhem/latest/total)](https://github.com/eried/portapack-mayhem/releases/latest) [![Docker Hub Pulls](https://img.shields.io/docker/pulls/eried/portapack.svg)](https://hub.docker.com/r/eried/portapack) [![Discord Chat](https://img.shields.io/discord/719669764804444213.svg)](https://discord.gg/tuwVMv3)  [![Check bounties!](https://img.shields.io/bountysource/team/portapack-mayhem/activity?color=%2333ccff&label=bountysource%20%28USD%29&style=plastic)](https://www.bountysource.com/teams/portapack-mayhem/issues)
+Enabling support for the latest batch of r9 hackrf one devices, QFP100 china knockoffs, and working hackrf mode, without needing to run nightly.
 
-This is a fork of the [Havoc](https://github.com/furrtek/portapack-havoc/) firmware, which itself was a fork of the [PortaPack](https://github.com/sharebrained/portapack-hackrf) firmware, an add-on for the [HackRF](http://greatscottgadgets.com/hackrf/). A fork is a derivate, in this case one that has extra features and fixes when compared to the older versions.
+## These may not be the droids you are looking for! If you are looking for portapack-mayhem's main repo, find it here: [https://github.com/eried/portapack-mayhem](https://github.com/eried/portapack-mayhem)
 
-[<img src="https://raw.githubusercontent.com/wiki/eried/portapack-mayhem/img/hw_overview_h2_front.png" height="400">](https://github.com/eried/portapack-mayhem/wiki/Hardware-overview) [<img src="https://raw.githubusercontent.com/wiki/eried/portapack-mayhem/img/hw_overview_h2_inside.png" height="400">](https://github.com/eried/portapack-mayhem/wiki/Hardware-overview#portapack-internals)
+If you acquired your hackrf/portapack combo from the [recommended aliexpress link](https://s.click.aliexpress.com/e/_DmU7GQX) detailed in the [what to buy section](https://github.com/eried/portapack-mayhem#what-to-buy), it will not work with v1.6.0 stable as it is now shipping an r9 hackrf, and so is too new. This probably is true for any genuine r9 device too, but we ([**Red**Stack.io](https://www.redstack.io) Labs) only have the one linked in the repo. Until such a time as upstream cuts a stable release, this version will work as a stable for this new variety of the device.
 
-*[PortaPack H2+HackRF+battery](https://s.click.aliexpress.com/e/_DmU7GQX) (clone) with a custom [3d printed case](https://github.com/eried/portapack-mayhem/wiki/H2-Enclosure)*
+Contained within the [release bundle](https://github.com/redstackio/portapack-mayhem/releases/tag/v1.6.1-rs):
 
-# Quick overview
+- Compiled firmware from the v1.6.1-rs tag/branch of this repo.
+- Upstream hackrf dfu and firmware bundle.
 
-If you are new to *HackRF+PortaPack+Mayhem*, there is an awesome introductory video by [Tech Minds](https://www.youtube.com/channel/UC9a8Z6Sp6eb2s3O79pX5Zvg) available:
+You'll also want the SD Card content for v1.6.0 from here: https://github.com/eried/portapack-mayhem/releases/tag/v1.6.0
 
-[![Setup and overview](https://img.youtube.com/vi/kjFB58Y1TAo/0.jpg)](https://www.youtube.com/watch?v=kjFB58Y1TAo)
+# Warning: If you use this firmware, it's unlikely the developers in discord will offer any support, as they consider it a _zOmBiE bUiLd_
 
-# Frequently Asked Questions
+That said, do open issues for the lack of r9 hackrf support in stable in their repo and perhaps they'll cut a point release to break the pain cycle as the number of these devices increases now that ali vendors are shipping them.
 
-This repository expands upon the previous work by many people and aims to constantly add new features, bugfixes and generate documentation to make further development easier.  [Collaboration](https://github.com/eried/portapack-mayhem/wiki/How-to-collaborate) is always welcomed and appreciated.
+### Important note about r9, h2+, and google search results that will cause you misery
+It is important, if you have an r9, that you don't use jumbo77's 1.43 release. It won't work. Nor will the `hackrf_one_usb.dfu` and `hackrf_one_usb.bin` firmware in the v1.6.0 release bundle, as it predates the merge of the r9 release code from GSG's repo. You **must** use the [Great Scott Gadgets release](https://github.com/greatscottgadgets/hackrf/releases/tag/v2023.01.1) firmware for dfu recovery or you will end up with a hackrf with flashing lights and a pained expression on your face.
 
-## What to buy?
+I have helpfully included both the dfu and bin for the hackrf v2023.01.1 release in this release file, so you _can_ use the ones from this zipfile.
 
-:heavy_check_mark: A recommended one is this [PortaPack H2](https://s.click.aliexpress.com/e/_DmU7GQX) pack, that includes everything you need. Sadly, the people making the H2 never made the updated schematics available (against the terms of the license). 
+### Firmware apply process:
 
-:heavy_check_mark: Another popular option is the clone of the [PortaPack H1](https://s.click.aliexpress.com/e/_Dkbqs2X).
+1. Apply upstream hackrf firmware:
+`hackrf_spiflash` -i -w hackrf_one_usb.bin`
+2. Restart hackrf then patch with portapack-mayhem firmware:
+`hackrf_spiflash` -i -w portapack-h1_h2-mayhem.bin`
+3. Disconnect from PC, then power on.
+4. You should see the splash and then have a working portapack.
 
-:warning: Be cautious , *ask* the seller about compatibility with the latest releases. Look out for the description of the item, if they provide the firmware files for an older version or they have custom setup instructions, this means it might be **NOT compatible**, for example:
+If you see a black screen on startup, power off the portapack then hold the right button and power back on. Repeat with the left/up/down/center button until LCD works.
 
-![image](https://user-images.githubusercontent.com/1091420/214579017-9ad970b9-0917-48f6-a550-588226d3f89b.png)
+### If you have already bricked your hackrf, you will need to use dfu to recover it.
 
-:warning: If it looks **too different**, this might mean that they are using their own recipe, check the [different models](https://github.com/eried/portapack-mayhem/wiki/PortaPack-Versions) in our wiki. For example all the H3 and clones of that version use their own version of the firmware. They do not contribute the changes back and eventually you will be left with a device that nobody maintains:
+1. Disassemble the hackrf + portapack.
+2. Connect hackrf only to PC.
+3. Hold DFU and Reset buttons then release reset and the light closest to the antenna port should glow faintly.
+4. `dfu-util -l` to confirm the presence of the device
+5. Apply upstream base firmware to the RAM:
+`dfu-util --device 1fc9:000c --download hackrf_one_usb.dfu --reset`
+6. If you now have a set of solid and bright lights at the top of the hackrf this step worked, and you can now immediately flash with upstream base firmware beginning at step 1 of the firmware apply process above.
+7. After you have patched with portapack firmware, reassemble the device, and you should be able to power it on.
+8. Test entry to hackrf mode. Confirm the blue screen appears properly. Confirm the device appears in the device list when connected to your PC
+9. Disconnect from USB and confirm the device returns to portapack mode.
 
-![image](https://user-images.githubusercontent.com/1091420/214581333-424900ee-26f8-4e96-be2f-69d8dc995ba9.png)
+```
+                            
+                            _ood>H&H&Z?#M#b-\.
+                        .\HMMMMMR?`\M6b."`' ''``v.
+                     .. .MMMMMMMMMMHMMM#&.      ``~o.
+                   .   ,HMMMMMMMMMM`' '           ?MP?.
+                  . |MMMMMMMMMMM'                 `"$b&\
+                 -  |MMMMHH##M'                     HMMH?
+                -   TTM|     >..                   \HMMMMH
+               :     |MM\,#-""$~b\.                `MMMMMM+
+              .       ``"H&#        -               &MMMMMM|
+              :            *\v,#MHddc.              `9MMMMMb
+              .               MMMMMMMM##\             `"":HM
+              -          .  .HMMMMMMMMMMRo_.              |M
+              :             |MMMMMMMMMMMMMMMM#\           :M
+              -              `HMMMMMMMMMMMMMM'            |T
+              :               `*HMMMMMMMMMMM'             H'
+               :                MMMMMMMMMMM|             |T
+                ;               MMMMMMMM?'              ./
+                 `              MMMMMMH'               ./'
+                  -            |MMMH#'                 .
+                   `           `MM*                . `
+                     _          #M: .    .       .-'
+                        .          .,         .-'
+                           '-.-~ooHH__,,v~--`'
 
-## Where is the latest version?
+    __  __           __      __  __            ____  __                 __
+   / / / /___ ______/ /__   / /_/ /_  ___     / __ \/ /___ _____  ___  / /_
+  / /_/ / __ `/ ___/ //_/  / __/ __ \/ _ \   / /_/ / / __ `/ __ \/ _ \/ __/
+ / __  / /_/ / /__/ ,<    / /_/ / / /  __/  / ____/ / /_/ / / / /  __/ /_
+/_/ /_/\__,_/\___/_/|_|   \__/_/ /_/\___/  /_/   /_/\__,_/_/ /_/\___/\__/
 
-The current **stable release** is on the [![GitHub release (latest by date)](https://img.shields.io/github/v/release/eried/portapack-mayhem?label=Releases&style=social)](https://github.com/eried/portapack-mayhem/releases/latest) page. Follow the instructions you can find in the release description. The **latest (nightly) release** can be found [here](https://github.com/eried/portapack-mayhem/releases/).
-
-## How can I collaborate
-You can write [documentation](https://github.com/eried/portapack-mayhem/wiki), fix bugs and [answer issues](https://github.com/eried/portapack-mayhem/issues) or add new functionality. Please check the following [guide](https://github.com/eried/portapack-mayhem/wiki/How-to-collaborate) with details.
-
-Consider that the hardware and firmware has been created and maintain by a [lot](https://github.com/mossmann/hackrf/graphs/contributors) of [people](https://github.com/eried/portapack-mayhem/graphs/contributors), so always try colaborating your time and effort first. For coding related questions, if something does not fit as an issue, please join our Discord by clicking the chat badge on [top](#portapack-mayhem).
-
-[![Contributors](https://contrib.rocks/image?repo=eried/portapack-mayhem)](https://github.com/eried/portapack-mayhem/graphs/contributors)
-
-To support the people behind the hardware, please buy a genuine [HackRF](https://greatscottgadgets.com/hackrf/) and [PortaPack](https://store.sharebrained.com/products/portapack-for-hackrf-one-kit).
-
-As a last option, if you want to send money directly to me for getting more boards, antennas and such:
-
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CBPQA4HRRPJQ6&source=url)
-
-## What if I really want something specific?
-If what you need can be relevant in general, you can [request a feature](https://github.com/eried/portapack-mayhem/issues/new?labels=enhancement&template=feature_request.md).
-
-You can create a bounty and invite people to your own bounty. This will incentivize coders to work on a new feature, solving a bug or even writting documentation. Start a bounty by [creating](https://github.com/eried/portapack-mayhem/issues/new/choose) or [choosing](https://github.com/eried/portapack-mayhem/issues/) an existing issue. Then, go to [Bountysource](https://www.bountysource.com/) and post a bounty using the link to that specific [issue](https://www.bountysource.com/teams/portapack-mayhem/issues).
-
-Promote your bounty over our Discord by clicking the chat badge on [top](#portapack-mayhem).
-
-## What if I need help?
-First, check the [documentation](https://github.com/eried/portapack-mayhem/wiki). If you find a bug or you think the problem is related to the current repository, please open an [issue](https://github.com/eried/portapack-mayhem/issues/new/choose).
-
-You can reach the [official community](https://www.facebook.com/groups/177623356165819) in Facebook, and our Discord by clicking the chat badge on [top](#portapack-mayhem).
+      ░░░░░░░█████╗░██████╗░██╗░░██╗███████╗██╗░░░░░██╗░█████╗░
+      ░░░░░░██╔══██╗██╔══██╗██║░░██║██╔════╝██║░░░░░██║██╔══██╗
+      █████╗██║░░██║██████╔╝███████║█████╗░░██║░░░░░██║███████║
+      ╚════╝██║░░██║██╔═══╝░██╔══██║██╔══╝░░██║░░░░░██║██╔══██║
+      ░░░░░░╚█████╔╝██║░░░░░██║░░██║███████╗███████╗██║██║░░██║
+      ░░░░░░░╚════╝░╚═╝░░░░░╚═╝░░╚═╝╚══════╝╚══════╝╚═╝╚═╝░░╚═╝
+                                               └──RedStack Labs
+```
