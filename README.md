@@ -25,10 +25,10 @@ I have helpfully included both the dfu and bin for the hackrf v2023.01.1 release
 
 ### Firmware apply process:
 
-1. Apply upstream hackrf firmware:
-`hackrf_spiflash` -i -w hackrf_one_usb.bin`
-2. Restart hackrf then patch with portapack-mayhem firmware:
-`hackrf_spiflash` -i -w portapack-h1_h2-mayhem.bin`
+1. Apply upstream hackrf firmware:  
+`hackrf_spiflash -i -w hackrf_one_usb.bin`
+2. Restart hackrf then patch with portapack-mayhem firmware:  
+`hackrf_spiflash -i -w portapack-h1_h2-mayhem.bin`
 3. Disconnect from PC, then power on.
 4. You should see the splash and then have a working portapack.
 
@@ -40,7 +40,7 @@ If you see a black screen on startup, power off the portapack then hold the righ
 2. Connect hackrf only to PC.
 3. Hold DFU and Reset buttons then release reset and the light closest to the antenna port should glow faintly.
 4. `dfu-util -l` to confirm the presence of the device
-5. Apply upstream base firmware to the RAM:
+5. Apply upstream base firmware to the RAM:  
 `dfu-util --device 1fc9:000c --download hackrf_one_usb.dfu --reset`
 6. If you now have a set of solid and bright lights at the top of the hackrf this step worked, and you can now immediately flash with upstream base firmware beginning at step 1 of the firmware apply process above.
 7. After you have patched with portapack firmware, reassemble the device, and you should be able to power it on.
